@@ -93,7 +93,7 @@ class MessageActions
         to: user.deviceToken
         data: message,
         notification:
-          title: 'New message'
+          title: 'У Вас новое сообщение'
           body: message.message
       fcm.send(_message).then((response) ->
         console.log("Successfully sent " + message.message + "with response: ", response)
