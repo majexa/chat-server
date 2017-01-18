@@ -78,7 +78,7 @@ class MessageActions
       ).bind(@))
     ).bind(@))
 
-  sendPush: (userId, message) ->
+  sendPush: (userId, message, onComplete) ->
     userId = @db.ObjectID(userId)
     @db.collection('users').findOne({
       _id: userId
@@ -97,9 +97,11 @@ class MessageActions
           body: message.message
       fcm.send(_message).then((response) ->
         console.log("Successfully sent " + message.message + "with response: ", response)
+        onComplete();
       ).catch((err) ->
         console.log("Something has gone wrong!" + message.message);
         console.error(err);
+        onComplete();
       )
     )
 
@@ -119,10 +121,11 @@ class MessageActions
       viewed: false,
       delivered: false
     @db.collection('messages').insertOne(message, ((err, r) ->
-      @saveStatuses([message], userId, true, (-> # sender viewed
+      @saveStatuses([message], userId, true, (-> # sender viewed..
         @saveStatuses([message], toUserId, false, (-> # recipient not yet
-          @sendPush(toUserId, message)
-          onComplete(message)
+          @sendPush(toUserId, message, ->
+            onComplete(message)
+          )
 #            @db.collection('chatUsers').updateOne({
 #              chatId: message.chatId,
 #              userId: toUserId

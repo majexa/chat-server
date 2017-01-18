@@ -5,8 +5,8 @@ module.exports =
     getSize = require 'get-folder-size'
     setInterval ->
       getSize server.config.appFolder + '/public/uploads', (err, uploadsSize) ->
-        db.stats (err, dbStat)->
-          db.collection('stat').insert
+        server.db.stats (err, dbStat)->
+          server.db.collection('stat').insert
             time: new Date().getTime()
             memory: process.memoryUsage().rss
             cpu: process.cpuUsage().user
@@ -14,11 +14,11 @@ module.exports =
             uploadsSize: uploadsSize
     , 60000 * 10
     setInterval ->
-      db.collection('users').count {
+      server.db.collection('users').count {
         status: 'online'
       }, (err, onlineCount) ->
-        db.collection('users').count (err, usersCount) ->
-          db.collection('usersStat').insert
+        server.db.collection('users').count (err, usersCount) ->
+          server.db.collection('usersStat').insert
             time: new Date().getTime()
             onlineCount: onlineCount
             usersCount: usersCount

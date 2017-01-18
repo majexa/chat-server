@@ -1,0 +1,36 @@
+<script>
+  var requireJS = [];
+  loadJS(requireJS, "js/aja.js");
+  loadJS(requireJS, "js/views/stat.js");
+</script>
+
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-sm-6 col-lg-6">
+      <div class="card card-inverse card-primary">
+        <div class="card-block pb-0">
+          <h4 class="mb-0" id="userChartLastCount1"></h4>
+          <p id="userChartTitle1"></p>
+        </div>
+        <div class="chart-wrapper px-1" style="height:70px;">
+          <canvas id="card-chart1" class="chart" height="70"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-6">
+      <div class="card card-inverse card-danger">
+        <div class="card-block pb-0">
+          <h4 class="mb-0" id="userChartLastCount2"></h4>
+          <p id="userChartTitle2"></p>
+        </div>
+        <div class="chart-wrapper px-1" style="height:70px;">
+          <canvas id="card-chart2" class="chart" height="70"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="cardsContainer"></div>
+</div>

@@ -6,8 +6,8 @@
       getSize = require('get-folder-size');
       setInterval(function() {
         return getSize(server.config.appFolder + '/public/uploads', function(err, uploadsSize) {
-          return db.stats(function(err, dbStat) {
-            return db.collection('stat').insert({
+          return server.db.stats(function(err, dbStat) {
+            return server.db.collection('stat').insert({
               time: new Date().getTime(),
               memory: process.memoryUsage().rss,
               cpu: process.cpuUsage().user,
@@ -18,11 +18,11 @@
         });
       }, 60000 * 10);
       return setInterval(function() {
-        return db.collection('users').count({
+        return server.db.collection('users').count({
           status: 'online'
         }, function(err, onlineCount) {
-          return db.collection('users').count(function(err, usersCount) {
-            return db.collection('usersStat').insert({
+          return server.db.collection('users').count(function(err, usersCount) {
+            return server.db.collection('usersStat').insert({
               time: new Date().getTime(),
               onlineCount: onlineCount,
               usersCount: usersCount

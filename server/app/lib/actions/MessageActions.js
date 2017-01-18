@@ -100,7 +100,7 @@
       }).bind(this));
     };
 
-    MessageActions.prototype.sendPush = function(userId, message) {
+    MessageActions.prototype.sendPush = function(userId, message, onComplete) {
       userId = this.db.ObjectID(userId);
       return this.db.collection('users').findOne({
         _id: userId
@@ -123,10 +123,12 @@
           }
         };
         return fcm.send(_message).then(function(response) {
-          return console.log("Successfully sent " + message.message + "with response: ", response);
+          console.log("Successfully sent " + message.message + "with response: ", response);
+          return onComplete();
         })["catch"](function(err) {
           console.log("Something has gone wrong!" + message.message);
-          return console.error(err);
+          console.error(err);
+          return onComplete();
         });
       });
     };
@@ -149,8 +151,9 @@
       return this.db.collection('messages').insertOne(message, (function(err, r) {
         return this.saveStatuses([message], userId, true, (function() {
           return this.saveStatuses([message], toUserId, false, (function() {
-            this.sendPush(toUserId, message);
-            return onComplete(message);
+            return this.sendPush(toUserId, message, function() {
+              return onComplete(message);
+            });
           }).bind(this));
         }).bind(this));
       }).bind(this));
