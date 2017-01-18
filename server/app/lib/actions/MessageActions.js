@@ -118,7 +118,7 @@
           to: user.deviceToken,
           data: message,
           notification: {
-            title: 'У Вас новое сообщение',
+            title: 'Новое сообщение',
             body: message.message
           }
         };
