@@ -1,6 +1,6 @@
 var ChatActions = require('../../actions/ChatActions');
 
-module.exports = function(server) {
+module.exports = function (server) {
 
   /**
    * @api {get} /user/info Get user info
@@ -15,16 +15,14 @@ module.exports = function(server) {
    * @apiErrorExample Error-Response:
    *   HTTP/1.1 404 Not Found
    *   {"error": "error message"}
-   *
-   * @apiSampleRequest /user/info
    */
-  server.app.get('/api/v1/user/info', function(req, res) {
+  server.app.get('/api/v1/user/info', function (req, res) {
     server.addApiCors(res);
     if (!req.query.phone && !req.query.id) {
       res.status(404).send({error: 'use phone or id get param'});
       return;
     }
-    var done = function(err, user) {
+    var done = function (err, user) {
       if (!user) {
         res.status(404).send({error: 'no user'});
         return;
@@ -65,19 +63,19 @@ module.exports = function(server) {
    *   HTTP/1.1 404 Not Found
    *   {"error": "error message"}
    */
-  server.app.get('/api/v1/user/update', function(req, res) {
-    var clean = function(obj) {
+  server.app.get('/api/v1/user/update', function (req, res) {
+    var clean = function (obj) {
       for (var propName in obj) {
         if (!obj[propName]) {
           delete obj[propName];
         }
       }
     };
-    server.tokenReq(req, res, function(res, user) {
+    server.tokenReq(req, res, function (res, user) {
       var data = req.query;
       delete data.token;
       clean(data);
-      server.db.collection('users').update({_id: server.db.ObjectID(user._id)}, {$set: data}, function(err, count) {
+      server.db.collection('users').update({_id: server.db.ObjectID(user._id)}, {$set: data}, function (err, count) {
         if (count) res.json({success: 1}); else res.json({error: 'user not found'});
       });
     });
@@ -96,18 +94,18 @@ module.exports = function(server) {
    */
   var formidable = require('formidable');
   var fs = require('fs');
-  server.app.post('/api/v1/user/upload', function(req, res) {
-    server.tokenReq(req, res, function(res, user) {
+  server.app.post('/api/v1/user/upload', function (req, res) {
+    server.tokenReq(req, res, function (res, user) {
       var fileName = user._id;
       var form = new formidable.IncomingForm();
       form.uploadDir = server.path.join(server.config.appFolder, '/public/uploads/user');
-      form.on('file', function(field, file) {
+      form.on('file', function (field, file) {
         fs.rename(file.path, server.path.join(form.uploadDir, fileName));
       });
-      form.on('error', function(err) {
+      form.on('error', function (err) {
         console.log('An error has occured: \n' + err);
       });
-      form.on('end', function() {
+      form.on('end', function () {
         res.end(fileName);
       });
       form.parse(req);
@@ -123,9 +121,9 @@ module.exports = function(server) {
    *
    * @apiSuccess {String} JSON with chats list
    */
-  server.app.get('/api/v1/user/chats', function(req, res) {
-    server.tokenReq(req, res, function(res, user) {
-      (new ChatActions(server.db)).getByUser(user._id, function(r) {
+  server.app.get('/api/v1/user/chats', function (req, res) {
+    server.tokenReq(req, res, function (res, user) {
+      (new ChatActions(server.db)).getByUser(user._id, function (r) {
         res.send(r);
       });
     });
@@ -138,22 +136,22 @@ module.exports = function(server) {
    *
    * @apiParam {String} token JWT token
    */
-  server.app.get('/api/v1/user/check', function(req, res) {
-    server.tokenReq(req, res, function(res, user) {
-      res.send({success: 1});
+  server.app.get('/api/v1/user/check', function (req, res) {
+    server.tokenReq(req, res, function (res, user) {
+      res.send(user);
     });
   });
 
   /**
-   * @api {get} /user/updateDeviceToken Check user token
+   * @api {get} /user/updateDeviceToken Update device token
    * @apiName Updates device token
    * @apiGroup User
    *
    * @apiParam {String} token JWT token
    * @apiParam {String} deviceToken Device token
    */
-  server.app.get('/api/v1/user/updateDeviceToken', function(req, res) {
-    server.tokenReq(req, res, function(res, user) {
+  server.app.get('/api/v1/user/updateDeviceToken', function (req, res) {
+    server.tokenReq(req, res, function (res, user) {
       if (!req.query.deviceToken) {
         res.status(404).send({error: 'deviceToken not defined'});
         return;
@@ -161,9 +159,41 @@ module.exports = function(server) {
       var data = {
         deviceToken: req.query.deviceToken
       };
-      server.db.collection('users').update({_id: server.db.ObjectID(user._id)}, {$set: data}, function(err, count) {
+      server.db.collection('users').update({_id: server.db.ObjectID(user._id)}, {$set: data}, function (err, count) {
         if (count) res.json({success: 1}); else res.json({error: 'user not found'});
       });
+    });
+  });
+
+  var refreshToken = function (user) {
+    var optionKeys = ['iat', 'exp', 'iss', 'sub'];
+    var newToken;
+    var obj = {};
+    for (var key in user) {
+      if (!user.hasOwnProperty(key)) continue;
+      if (optionKeys.indexOf(key) === -1) {
+        obj[key] = user[key];
+      }
+    }
+    var jwt = require('jsonwebtoken');
+    var config = require('../../../config');
+    newToken = jwt.sign(obj, config.jwtSecret, {
+      expiresIn: '7 days'
+    });
+    return newToken;
+  };
+
+
+  /**
+   * @api {get} /user/updateToken Update user token
+   * @apiName Updates user token
+   * @apiGroup User
+   *
+   * @apiParam {String} token JWT token
+   */
+  server.app.get('/api/v1/user/updateToken', function (req, res) {
+    server.tokenReq(req, res, function (res, user) {
+      res.json({newToken: refreshToken(user)});
     });
   });
 

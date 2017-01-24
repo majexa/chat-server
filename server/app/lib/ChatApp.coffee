@@ -40,6 +40,7 @@ class ChatApp
     @initSession(@app)
 
   initLogger: (db) ->
+    return
     logger = (req, res, next) ->
       if !req.url.match(/\/api.*/)
         next()
@@ -51,8 +52,10 @@ class ChatApp
         chunks.push(chunk)
         oldWrite.apply(res, arguments)
       res.end = (chunk) ->
+        console.log(chunk)
         if (chunk)
           chunks.push(chunk);
+        console.log(chunks)
         body = Buffer.concat(chunks).toString('utf8');
         db.collection('logs').insertOne({
           dt: new Date(),

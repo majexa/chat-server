@@ -49,6 +49,7 @@
 
     ChatApp.prototype.initLogger = function(db) {
       var logger;
+      return;
       logger = function(req, res, next) {
         var chunks, oldEnd, oldWrite;
         if (!req.url.match(/\/api.*/)) {
@@ -64,9 +65,11 @@
         };
         res.end = function(chunk) {
           var body;
+          console.log(chunk);
           if (chunk) {
             chunks.push(chunk);
           }
+          console.log(chunks);
           body = Buffer.concat(chunks).toString('utf8');
           db.collection('logs').insertOne({
             dt: new Date(),

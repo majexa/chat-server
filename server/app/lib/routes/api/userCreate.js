@@ -14,8 +14,6 @@ module.exports = function(server) {
    * @apiErrorExample Error-Response:
    *   HTTP/1.1 404 Not Found
    *   {"error": "error message"}
-   *
-   * @apiSampleRequest /user/create
    */
   server.app.get('/api/v1/user/create', function(req, res) {
     server.addApiCors(res);

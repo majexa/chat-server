@@ -4,6 +4,7 @@ class Server
     @event = new EventEmitter();
     require('./routes/api/login/byPhone')(@)
     require('./routes/api/user')(@)
+    require('./routes/api/userCreate')(@)
     require('./routes/api/contacts')(@)
     require('./routes/api/message')(@)
     require('./routes/api/chat')(@)

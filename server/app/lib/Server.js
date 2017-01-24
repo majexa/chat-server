@@ -15,6 +15,7 @@
       this.event = new EventEmitter();
       require('./routes/api/login/byPhone')(this);
       require('./routes/api/user')(this);
+      require('./routes/api/userCreate')(this);
       require('./routes/api/contacts')(this);
       require('./routes/api/message')(this);
       require('./routes/api/chat')(this);
