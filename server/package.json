@@ -15,6 +15,7 @@
     "ejs": "^2.5.3",
     "express": "^4.13.4",
     "express-session": "^1.14.2",
+    "fcm-push": "^1.1.2",
     "formidable": "^1.0.17",
     "get-folder-size": "^1.0.0",
     "jade": "^1.11.0",
