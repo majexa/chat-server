@@ -1,6 +1,6 @@
 # Mersal Chat Server
 
-## Install
+## Installation
 
 ### Mongodb
 
