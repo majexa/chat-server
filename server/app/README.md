@@ -1,6 +1,6 @@
-#Mersal Chat Server
+# Mersal Chat Server
 
-##Install
+## Install
 
 ### Mongodb
 
@@ -17,16 +17,16 @@
 
     sudo ln -sf /usr/local/n/versions/node/<VERSION>/bin/node /usr/bin/node
 
-##Generating docs
+## Generating docs
 
     cd server
     apidoc -i app/lib/routes/api
     
-##Running tests
+## Running tests
     
     cd server/app/lib
     ../../node_modules/mocha/bin/mocha
     
-##Charts
+## Charts
   
   from http://www.chartjs.org/docs/#line-chart-introduction
