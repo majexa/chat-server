@@ -33,7 +33,7 @@
       },
       formatters: {
         status: function (status) {
-          return '<span class="tag tag-' + (status == 'online' ? 'success' : 'danger') + '">' + //
+          return '<span class="tag tag-' + (status === 'online' ? 'success' : 'danger') + '">' + //
             status + '</span>';
         }
       }
@@ -46,9 +46,9 @@
     width: 300,
     title: true,
     buttonExtraClass: function (name) {
-      if (name == 'ok') {
+      if (name === 'ok') {
         return 'btn-primary';
-      } else if (name == 'cancel') {
+      } else if (name === 'cancel') {
         return 'btn-secondary';
       }
       return false;

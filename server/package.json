@@ -13,7 +13,7 @@
     "cors": "^2.8.1",
     "dateformat": "^2.0.0",
     "ejs": "^2.5.3",
-    "express": "^4.13.4",
+    "express": "^4.14.1",
     "express-session": "^1.14.2",
     "fcm-push": "^1.1.2",
     "formidable": "^1.0.17",

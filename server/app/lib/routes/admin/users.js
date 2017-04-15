@@ -67,6 +67,20 @@ module.exports = function(app, db) {
     getItemsRequest(req, res);
   });
 
+  app.get('/admin/users/asd', function(req, res) {
+    app.render('admin/user/stat', {
+      phone: '',
+      login: '',
+      password: ''
+    }, function(err, html) {
+      if (err) throw new Error(err);
+      console.log(html);
+      res.json({
+        form: html,
+        title: 'Create User'
+      });
+    });
+  });
   app.get('/admin/users/json_new', function(req, res) {
     // if (!req.session || !req.session.admin) {
     //   res.status(404).json({error: 'access denied'});
@@ -77,6 +91,7 @@ module.exports = function(app, db) {
       login: '',
       password: ''
     }, function(err, html) {
+      console.log(html);
       res.json({
         form: html,
         title: 'Create User'

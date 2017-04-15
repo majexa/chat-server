@@ -8,7 +8,7 @@ module.exports = (chatApp, db) ->
   chatApp.initSession(cAdminApp)
 
   cAdminApp.use(chatApp.express.static(adminBasePath + '/public'))
-  cAdminApp.set('view engine', 'ejs');
+  cAdminApp.set('view engine', 'jade');
   cAdminApp.set('views', adminBasePath + '/views');
   cAdminApp.engine('html', require('ejs').renderFile);
 

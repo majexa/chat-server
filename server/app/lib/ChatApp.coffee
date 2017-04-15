@@ -21,11 +21,13 @@ class ChatApp
       extended: true
 
     @app.set 'view engine', 'jade'
+    console.log @path.normalize @config.appFolder + '/../views';
     @app.set 'views', @path.normalize @config.appFolder + '/../views'
     @app.use @express.static @path.join @config.appFolder, 'public'
     @app.get '/', ((req, res) ->
       res.sendFile(@config.appFolder + '/index.html')
     ).bind(@)
+
     @http = require('http').Server(@app)
 
   initMongo: (onInit) ->
@@ -72,6 +74,8 @@ class ChatApp
     mongodb = require 'mongodb'
     mongoClient = mongodb.MongoClient
     mongoClient.connect @mongoUrl, ((err, db) ->
+      if err
+        throw new Error(err)
       console.log 'mongo connected'
       db.ObjectID = (id) ->
         if typeof id == 'string'

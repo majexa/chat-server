@@ -1,5 +1,4 @@
 module.exports = function(server) {
-
   server.app.get('/admin', function(req, res) {
     res.send('<form method="post" action="/admin/auth"><p>Admin Password:<br><input type="password" name="password"></p><input type="submit"></form>');
   });
